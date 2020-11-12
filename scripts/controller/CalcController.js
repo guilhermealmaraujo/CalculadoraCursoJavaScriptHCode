@@ -36,9 +36,98 @@ class CalcController{
 
     }
 
+    getLastOperation(){
+
+        return this._operation[this._operation.length-1]
+
+    }
+
+    setLastOperation(value){
+
+        this._operation[this._operation.length-1] = value
+
+    }
+
+    isOperator(value){
+        
+        return ['+', '-', '*', '%', '/'].indexOf(value) > -1
+    }
+
+    pushOperation(value){
+        this._operation.push(value)
+
+        if(this._operation.length > 3){
+            
+            this.calc()
+
+        }
+
+    }
+
+    calc(){
+
+        let last = this._operation.pop()
+
+        let result = eval(this._operation.join(""))
+
+        this._operation = [result, last]
+
+        this.setLastNUmberToDisplay()
+
+    }
+
+    setLastNUmberToDisplay(){
+
+        let lastNumber
+
+        for (let i = this._operation.length-1; i >= 0; i--) {
+
+            if (!this.isOperator(this._operation[i])){
+                lastNumber = this._operation[i]
+                break
+            }
+            
+        }
+
+        this.displayCalc = lastNumber
+
+    }
+
     addOperation(value){
 
-        this._operation.push(value)
+        if(isNaN(this.getLastOperation())){
+            
+            if(this.isOperator(value)){
+
+                this.setLastOperation(value)
+                
+            }else if(isNaN(value)){
+                
+                //Outra Coisa
+                console.log("Outra Coisa")
+
+            }else{
+                
+                this.pushOperation(value)
+                this.setLastNUmberToDisplay()
+
+            }
+        }else{
+
+            if(this.isOperator(value)){
+
+                this.pushOperation(value)
+
+            }else{
+
+                let newValue = this.getLastOperation().toString() + value.toString()
+                this.setLastOperation(parseInt(newValue))
+
+                this.setLastNUmberToDisplay()
+
+            }
+
+        }
 
     }
 
@@ -57,22 +146,25 @@ class CalcController{
                 this.clearEntry()
                 break
             case 'soma':
-                
+                this.addOperation('+')
                 break
             case 'subtracao':
-                
+                this.addOperation('-')
                 break
             case 'divisao':
-                
+                this.addOperation('/')
                 break
             case 'multiplicacao':
-                
+                this.addOperation('*')
                 break
             case 'porcento':
-                
+                this.addOperation('%')
                 break
             case 'igual':
                 
+                break
+            case 'ponto':
+                this.addOperation('.')
                 break
             case '0':
             case '1':
@@ -84,7 +176,8 @@ class CalcController{
             case '7':
             case '8':
             case '9':
-                this.addOperation( parseInt(value))
+                this.addOperation(parseInt(value))
+                break
             default:
                 this.setError()
                 break

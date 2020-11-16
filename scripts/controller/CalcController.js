@@ -13,6 +13,7 @@ class CalcController{
         this._currentDate
         this.initialize()
         this.initButtonEvents()
+        this.initKeyboard()
     }
 
     initialize(){
@@ -24,6 +25,57 @@ class CalcController{
         }, 1000)
 
         this.setLastNUmberToDisplay()
+    }
+
+    initKeyboard(){
+
+        document.addEventListener('keyup', e=>{
+            console.log(this._operation)
+            console.log(e.key)
+            console.log(e)
+            switch(e.key){
+        
+                case ' ':
+                    this.clearAll()
+                    break
+
+                case 'Backspace':
+                    this.clearEntry()
+                    break
+
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                case '%':
+                    this.addOperation(e.key)
+                    break
+
+                case 'Enter':
+                case '=':
+                    this.calc()
+                    break
+
+                case '.':
+                case ',':
+                    this.addDot()
+                    break
+
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    this.addOperation(parseInt(e.key))
+                    break
+            }
+        })
+        console.log(this._operation)
     }
 
     addEventListenerAll(element, events, fn){

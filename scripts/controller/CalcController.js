@@ -14,6 +14,35 @@ class CalcController{
         this.initialize()
         this.initButtonEvents()
         this.initKeyboard()
+        this.pasteFromClipBoard()
+    }
+
+    copyToClipboard(){
+
+        let input = document.createElement('input')
+
+        input.value = this.displayCalc
+
+        document.body.appendChild(input)
+
+        input.select()
+
+        document.execCommand("Copy")
+
+        input.remove()
+
+    }
+
+    pasteFromClipBoard(){
+
+        document.addEventListener('paste', e=>{
+        
+            let text = e.clipboardData.getData('Text')
+
+            this.displayCalc = parseFloat(text)
+
+        })
+
     }
 
     initialize(){
@@ -30,9 +59,7 @@ class CalcController{
     initKeyboard(){
 
         document.addEventListener('keyup', e=>{
-            console.log(this._operation)
-            console.log(e.key)
-            console.log(e)
+
             switch(e.key){
         
                 case ' ':
@@ -73,9 +100,12 @@ class CalcController{
                 case '9':
                     this.addOperation(parseInt(e.key))
                     break
+                case 'c':
+                    if(e.ctrlKey) this.copyToClipboard() 
+                    break
             }
         })
-        console.log(this._operation)
+
     }
 
     addEventListenerAll(element, events, fn){
